@@ -42,7 +42,7 @@ class UALDataset(torch.utils.data.Dataset):
 if __name__ == "__main__":
     print("UALDataset")
     data_dir = '../../project/UAL_2500'
-    csv_path = './data/ual/train.csv'
+    csv_path = './dataset/ual/train.csv'
     ds = UALDataset(data_dir, csv_path)
 
     img, mask = ds[0]
