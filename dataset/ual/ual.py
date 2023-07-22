@@ -19,15 +19,14 @@ class UALDataset(torch.utils.data.Dataset):
     
     def __getitem__(self, idx):
         row = self.df.iloc[idx]
-        img = cv2.imread(os.path.join(self.img_dir, row['img']))[:, :, ::-1]
-        mask = cv2.imread(os.path.join(self.mask_dir, row['mask']))[:, :, 0]
+        img_path = os.path.join(self.img_dir, row['img'])
+        mask_path = os.path.join(self.mask_dir, row['mask'])
+        print(img_path, mask_path)
+        img = cv2.imread(img_path)[:, :, ::-1]
+        mask = cv2.imread(mask_path)[:, :, 0]
         
         img = cv2.resize(img, (self.img_w, self.img_h))
         mask = self.preprocess_mask(mask)
-
-        if self.aug:
-            img, mask = self.seq(image=img, segmentation_maps=mask)
-
         mask = mask.get_arr()  # to np
         mask = torch.tensor(mask, dtype=torch.long)
 
@@ -41,8 +40,9 @@ class UALDataset(torch.utils.data.Dataset):
     
 if __name__ == "__main__":
     print("UALDataset")
-    data_dir = '../../project/UAL_2500'
-    csv_path = './dataset/ual/train.csv'
+    data_dir = '../../../../project/UAL_2500'
+#     data_dir = '../../project/UAL_2500'
+    csv_path = './train.csv'
     ds = UALDataset(data_dir, csv_path)
 
     img, mask = ds[0]
